@@ -1,0 +1,26 @@
+version: '0.1'
+name: metronic-backend
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE_NAME}
+    env_file:
+      - ./.env
+    volumes:
+      - mongo:/data/db
+    ports:
+      - '27027:27017'
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6399:6379'
+    volumes:
+      - redis:/data
+volumes:
+  mongo:
+  redis:
