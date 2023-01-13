@@ -3,7 +3,7 @@ import config from 'config';
 
 const dbUrl = `mongodb://${config.get('dbName')}:${config.get(
   'dbPass'
-)}@localhost:27027/jwtAuth?authSource=admin`;
+)}@localhost:27027/gozcum?authSource=admin`;
 
 const connectDB = async () => {
   try {

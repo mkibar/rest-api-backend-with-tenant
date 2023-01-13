@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
+import { StatusCode } from '../models/enums';
 
 export const validate =
   (schema: AnyZodObject) =>
@@ -15,7 +16,7 @@ export const validate =
     } catch (err: any) {
       if (err instanceof ZodError) {
         return res.status(400).json({
-          status: 'fail',
+          status: StatusCode.Fail,
           error: err.errors,
         });
       }

@@ -1,5 +1,5 @@
 version: '0.1'
-name: metronic-backend
+name: react-metronic
 services:
   mongo:
     image: mongo:latest

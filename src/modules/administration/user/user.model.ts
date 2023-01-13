@@ -20,6 +20,9 @@ import bcrypt from 'bcryptjs';
   schemaOptions: {
     // Add createdAt and updatedAt fields
     timestamps: true,
+    versionKey: false,  // __v property sini ekleme
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   },
 })
 
@@ -27,9 +30,9 @@ import bcrypt from 'bcryptjs';
 export class User {
   @prop()
   name: string;
-  
+
   @prop({ refPath: 'name' })
-  first_name:string;
+  first_name: string;
 
   @prop({ unique: true, required: true })
   email: string;

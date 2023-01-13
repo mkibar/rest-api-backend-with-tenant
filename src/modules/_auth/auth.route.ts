@@ -1,10 +1,10 @@
 import express from 'express';
-import { loginHandler, registerHandler } from '../controllers/auth.controller';
-import { validate } from '../middleware/validate';
-import { createUserSchema, loginUserSchema } from '../schema/user.schema';
+import { loginHandler, registerHandler } from './auth.controller';
+import { validate } from '../../middleware/validate';
+import { createUserSchema, loginUserSchema } from '../administration/user/user.schema';
 // import { deserializeUser } from '../middleware/deserializeUser';//mk
 // import { requireUser } from '../middleware/requireUser';//mk
-import { getMeHandler } from '../controllers/user.controller';//mk
+import { getMeHandler } from '../administration/user/user.controller';//mk
 
 const router = express.Router();
 

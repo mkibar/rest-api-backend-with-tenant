@@ -5,8 +5,9 @@ import config from 'config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './utils/connectDB';
-import userRouter from './routes/user.route';
-import authRouter from './routes/auth.route';
+import userRouter from './modules/administration/user/user.route';
+import usersRouter from './modules/administration/user/users.route';
+import authRouter from './modules/_auth/auth.route';
 
 // https://github.com/wpcodevo/jwt_authentication_authorization_node
 
@@ -32,7 +33,8 @@ app.use(
 );
 
 // 5. Routes
-app.use('/api/users', userRouter);
+app.use('/api/user', userRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 
 // Testing
@@ -54,6 +56,8 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
+
+  // TODO: Add Log, tercihen rapidmq ile mongo içerisine
 
   res.status(err.statusCode).json({
     status: err.status,

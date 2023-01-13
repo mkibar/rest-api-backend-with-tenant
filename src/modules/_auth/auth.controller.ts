@@ -1,8 +1,9 @@
 import config from 'config';
 import { CookieOptions, NextFunction, Request, Response } from 'express';
-import { CreateUserInput, LoginUserInput } from '../schema/user.schema';
-import { createUser, findUser, signToken } from '../services/user.service';
-import AppError from '../utils/appError';
+import { StatusCode } from '../../models/enums';
+import { CreateUserInput, LoginUserInput } from '../administration/user/user.schema';
+import { createUser, findUser, signToken } from '../administration/user/user.service';
+import AppError from '../../utils/errors/appError';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -34,7 +35,7 @@ export const registerHandler = async (
     });
 
     res.status(201).json({
-      status: 'success',
+      status: StatusCode.Success,
       data: {
         user,
       },
@@ -42,7 +43,7 @@ export const registerHandler = async (
   } catch (err: any) {
     if (err.code === 11000) {
       return res.status(409).json({
-        status: 'fail',
+        status: StatusCode.Fail,
         message: 'Email already exist',
       });
     }
@@ -58,7 +59,7 @@ export const loginHandler = async (
   try {
     // Get the user from the collection
     const user = await findUser({ email: req.body.email });
-
+    
     // Check if user exist and password is correct
     if (
       !user ||

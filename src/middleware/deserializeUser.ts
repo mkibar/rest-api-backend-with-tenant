@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { findUserById } from '../services/user.service';
-import AppError from '../utils/appError';
+import { findUserById } from '../modules/administration/user/user.service';
+import AppError from '../utils/errors/appError';
 import redisClient from '../utils/connectRedis';
 import { verifyJwt } from '../utils/jwt';
 
@@ -34,13 +34,17 @@ export const deserializeUser = async (
 
     // Check if user has a valid session
     const session = await redisClient.get(decoded.sub);
+    
+    //TODO: Performans için: user.service içerisindeki signToken metodunda, redis içerisine User verisinin tamamı daha az süreli (8 saat) olarak yazılabilir
+    //        önce user verisi kontrol edilir, var ise kullanılır yok ise yukarıdaki satır ile alınabilir. 
 
     if (!session) {
       return next(new AppError(`User session has expired`, 401));
     }
 
     // Check if user still exist
-    const user = await findUserById(JSON.parse(session)._id);
+    //const user = await findUserById(JSON.parse(session)._id);
+    const user = JSON.parse(session);
 
     if (!user) {
       return next(new AppError(`User with that token no longer exist`, 401));
@@ -49,7 +53,7 @@ export const deserializeUser = async (
     // This is really important (Helps us know if the user is logged in from other controllers)
     // You can do: (req.user or res.locals.user)
     res.locals.user = user;
-
+    
     next();
   } catch (err: any) {
     next(err);
