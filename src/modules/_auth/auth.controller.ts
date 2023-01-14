@@ -5,6 +5,7 @@ import { CreateUserInput, LoginUserInput } from '../administration/user/user.sch
 import { createUser, findUser, signToken } from '../administration/user/user.service';
 import AppError from '../../utils/errors/appError';
 import redisClient from '../../utils/connectRedis';
+import tenantModel, { Tenant } from '../administration/tenant/tenant.model';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -38,10 +39,15 @@ export const registerHandler = async (
   next: NextFunction
 ) => {
   try {
+    const tenant = await tenantModel.findById(req.body.tenant).lean();
+    if (!tenant)
+      throw new AppError('Tenant bulunamadı!', 500);
+
     const user = await createUser({
       email: req.body.email,
       name: req.body.name,
       password: req.body.password,
+      tenant: tenant._id
     });
 
     res.status(201).json({

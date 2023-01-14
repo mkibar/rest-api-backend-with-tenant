@@ -8,6 +8,7 @@ import connectDB from './utils/connectDB';
 import userRouter from './modules/administration/user/user.route';
 import usersRouter from './modules/administration/user/users.route';
 import authRouter from './modules/_auth/auth.route';
+import tenantRouter from './modules/administration/tenant/tenant.route';
 
 // https://github.com/wpcodevo/jwt_authentication_authorization_node
 
@@ -33,9 +34,10 @@ app.use(
 );
 
 // 5. Routes
+app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/auth', authRouter);
+app.use('/api/tenant', tenantRouter);
 
 // Testing
 app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {

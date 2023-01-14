@@ -1,3 +1,6 @@
-export class ErrorCodes {
-    public static 0001 = 'Beklenmeyen hata';
+const ErrorList = {
+    '0001': '',
+    '0002': 'Tenant bulunamadı'
 }
+
+export { ErrorList };

@@ -6,15 +6,11 @@ import { excludedFields } from '../../_auth/auth.controller';
 import { signJwt } from '../../../utils/jwt';
 import redisClient from '../../../utils/connectRedis';
 import { DocumentType } from '@typegoose/typegoose';
-import internal from 'stream';
-import { Request } from 'express';
-import { json } from 'stream/consumers';
 import { getPagination } from '../../../utils/paginationHelper';
 
 // CreateUser service
 export const createUser = async (input: Partial<User>) => {
   try {
-    // TODO: add tenant field
     const user = await userModel.create(input);
     return omit(user.toJSON(), excludedFields);
   } catch (error: any) {
@@ -74,17 +70,19 @@ export const queryUsers = async (page: number = 1, items_per_page: number = 10, 
   try {
     let sort = sortField ? JSON.parse(`{"${sortField}":"${order ?? '1'}"}`) : {};
 
-    // TODO: add tenant filter
-    let data = await userModel.find({
+    let filter = {
       $or: [
         { "name": new RegExp(`${search}`, 'i') },
         { "email": new RegExp(`${search}`, 'i') }]
-    })
+    };
+    // TODO: add tenant filter
+    let data = await userModel.find(filter)
+      //.populate('tenant')
       .sort(sort)
       .skip(items_per_page * (page - 1))    // kacinci sayfadan baslanacagi 
       .limit(items_per_page);                // kac kayit alinacagi
 
-    let totalCount = await userModel.countDocuments().exec();
+    let totalCount = await userModel.countDocuments(filter).exec();
 
     let pagination = getPagination(page, items_per_page, totalCount)
     return {

@@ -1,11 +1,16 @@
+import { StatusCode } from "../../models/enums";
+import { ErrorList } from "../../models/errorcodes";
+
 export default class BusinessError extends Error {
   status: string;
   isOperational: boolean;
   errorCode: string;
 
-  constructor(public error_Code ='', public message: string, public statusCode: number = 500) {
+  constructor(public error_Code = '', public message = '') {
+    // TODO errorcode to error message
+
     super(message);
-    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.status = StatusCode.Error;
     this.isOperational = true;
     this.errorCode = error_Code;
 

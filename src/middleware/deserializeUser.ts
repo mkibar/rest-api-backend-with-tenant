@@ -31,10 +31,10 @@ export const deserializeUser = async (
     if (!decoded) {
       return next(new AppError(`Invalid token or user doesn't exist`, 401));
     }
-
+    
     // Check if user has a valid session
     const session = await redisClient.get(decoded.sub);
-    
+
     //TODO: Performans için: user.service içerisindeki signToken metodunda, redis içerisine User verisinin tamamı daha az süreli (8 saat) olarak yazılabilir
     //        önce user verisi kontrol edilir, var ise kullanılır yok ise yukarıdaki satır ile alınabilir. 
 
