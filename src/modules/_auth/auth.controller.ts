@@ -4,6 +4,7 @@ import { StatusCode } from '../../models/enums';
 import { CreateUserInput, LoginUserInput } from '../administration/user/user.schema';
 import { createUser, findUser, signToken } from '../administration/user/user.service';
 import AppError from '../../utils/errors/appError';
+import redisClient from '../../utils/connectRedis';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -14,6 +15,15 @@ const accessTokenCookieOptions: CookieOptions = {
     Date.now() + config.get<number>('accessTokenExpiresIn') * 60 * 1000
   ),
   maxAge: config.get<number>('accessTokenExpiresIn') * 60 * 1000,
+  httpOnly: true,
+  sameSite: 'lax',
+};
+
+// Delete cookie options
+const deleteCookieOptions: CookieOptions = {
+  expires: new Date(
+    Date.now()
+  ),
   httpOnly: true,
   sameSite: 'lax',
 };
@@ -59,7 +69,7 @@ export const loginHandler = async (
   try {
     // Get the user from the collection
     const user = await findUser({ email: req.body.email });
-    
+
     // Check if user exist and password is correct
     if (
       !user ||
@@ -77,14 +87,39 @@ export const loginHandler = async (
       ...accessTokenCookieOptions,
       httpOnly: false,
     });
-    
+
     // Send Access Token
     res.status(200).json({
       status: 'success',
-      //access_token,
-      api_token:access_token
+      api_token: access_token
     });
   } catch (err: any) {
-        next(err);
+    next(err);
   }
 };
+
+export const logoutHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user from the collection
+    const user = res.locals.user;
+
+    // Delete Session in Redis
+    redisClient.del(user._id.toString());
+
+    // Send Access Token in Cookie
+    res.cookie('access_token', null, deleteCookieOptions);
+    res.cookie('logged_in', false, deleteCookieOptions);
+
+    // Send Access Token
+    res.status(200).json({
+      status: 'success',
+    });
+  } catch (err: any) {
+    next(err);
+  }
+};
+

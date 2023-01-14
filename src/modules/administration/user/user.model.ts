@@ -20,7 +20,7 @@ import bcrypt from 'bcryptjs';
   schemaOptions: {
     // Add createdAt and updatedAt fields
     timestamps: true,
-    versionKey: false,  // __v property sini ekleme
+    versionKey: false,            // __v property sini ekleme
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
   },

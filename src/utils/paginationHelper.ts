@@ -1,4 +1,4 @@
-import PaginationModel from "../models/core/paginationModel";
+import PaginationModel from "../models/paginationModel";
 
 // pagination model verilerini olusturur
 export const getPagination = (page: number, itemsPerPage: number, totalCount: number) => {

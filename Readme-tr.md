@@ -1,11 +1,7 @@
-This project based  on https://github.com/wpcodevo/jwt_authentication_authorization_node
+This project forked on https://github.com/wpcodevo/jwt_authentication_authorization_node
 
 
-# Proje Yapısı
-
-Bu projeyi belli standartlarda tutmak, okunurluğu ve kullanılabilirliği artırmak için bazı kurallar benimsenmiştir. Yeni dosya ve metodlar bu kurallar göz önüne alınarak eklenmelidir.
-
-## Dizin ve Dosya Yapısı
+# Dizin ve Dosya Yapısı
 
 Proje içerisindeki *base-core* gibi yapısal özellikte olmayan *business* işlemler için kullanılan bütün dosyalar hiyerarşik olarak **modules** dizini içerisinde bulunur.
 
@@ -19,26 +15,26 @@ Proje içerisindeki *base-core* gibi yapısal özellikte olmayan *business* işl
     > errors          -- özel hata sınıfları bu dizindedir 
   
 
-## Route Standartları
+# Route Standartları
 Route sınıfları için 
 
 
-## Controller Standartları
+# Controller Standartları
 
 
-## Service Standartları
+# Service Standartları
 
 * Servis sınıfları isimledirilirken ilgili modül-ekran-tablo isimleri kullanılır. Örneğin *user* API ucu için: *user.service.ts*
 * Servis metodları *primitive* tip yada *...RequestDto* tipinde parametreler alır. *Request* parametresi almaz 
 
-## Model Standartları
+# Model Standartları
 
 * Model sını
 
-## Schema Standartları
+# Schema Standartları
 
 
-## Yeni Endpoint Ekleme Adımları
+# Yeni Endpoint Ekleme Adımları
 
 * Yeni bir *endpoint* için *modules* dizininde uygun dizine eklenmesi gereken dosyalar şunlardır: *...model.ts*, *...route.ts*, *...controller.ts*, *.../service.ts*, *...scheme.ts*
 
@@ -97,7 +93,7 @@ export const findUserById = async (id: string) => {
 # Validation
 Validayon işlemleri bir kaç aşamada yapılabilir. İlk validasyon *Request* içerisindeki verinin kontrolü için *middleware* de tanımlı *validate* ve *schema* sınıfları ile *route* içerisinde yapılır. *Schema* validasyonu için *zod* paketi kullanılmaktadır. İkinci validasyon ise *controller* sınıfları içerisinde yapılır.  
 
-### 1- Schema Validation
+## 1- Schema Validation
 ````typescript
 // auth.route.ts
 router.post('/register', validate(createUserSchema), registerHandler);
@@ -120,7 +116,7 @@ export const createUserSchema = object({
 });
 ````
 
-### 2- Business Validation
+## 2- Business Validation
 
 İş kuralları ve mantıksal kuralların yapıldığı validasyon şeklidir ve *controller* dosyarındaki *handler* metodlarında yapılır. Öreğin kayıt-kullanıcı mevcut kontrolü, iş kurallarına uygun olmayan ilişkilsel değerler vb.
 
