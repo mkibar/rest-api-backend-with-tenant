@@ -22,10 +22,9 @@ import { Tenant } from '../tenant/tenant.model';
 })
 @modelOptions({
   schemaOptions: {
-    // Add createdAt and updatedAt fields
-    timestamps: true,
-    versionKey: false,            // __v property sini ekleme
-    toJSON: { virtuals: true, transform: function (doc, ret) { delete ret._id } },
+    timestamps: true,             // Add createdAt and updatedAt fields
+    //versionKey: false,            // __v property sini ekleme
+    toJSON: { virtuals: true, transform: function (doc, ret) { delete ret._id; delete ret.__v; } },
     toObject: { virtuals: true }
   },
   options: {
@@ -38,20 +37,56 @@ export class User {
   @prop()
   name: string;
 
-  @prop({ refPath: 'name' })
-  first_name: string;
+  @prop()
+  lastName: string;
 
-  @prop({ unique: true, required: true })
+  @prop({ unique: true, required: true, trim: true })
   email: string;
 
   @prop({ required: true, minlength: 8, maxLength: 32, select: false })
   password: string;
 
+  @prop({ default: true })
+  isActive: boolean;
+
+  // TODO: will delete
   @prop({ default: 'user' })
   role: string;
 
-  @prop({ required: true, ref: 'Tenant' })
+  @prop({
+    required: true,
+    ref: 'Tenant'
+    //ref: () => Tenant
+  })
   public tenant: Ref<Tenant>
+
+  @prop()
+  emailConfirmed?: boolean;
+
+  @prop({ default: false })
+  lockoutEnabled?: boolean;
+
+  @prop()
+  lockoutEnd?: Date;
+
+  @prop({ default: 0 })
+  accessFailedCount?: number;
+
+  @prop({ default: false })
+  isVerified: boolean;
+
+  @prop()
+  passwordChangeDate?: Date;
+
+  @prop()
+  // kullanicinin son giris yapabilecegi tarih
+  loginEndDate?: Date;
+
+
+  // this will create a virtual property called 'fullName'
+  public get fullName() {
+    return `${this.name} ${this.lastName}`;
+  }
 
   // Instance method to check if passwords match
   async comparePasswords(hashedPassword: string, candidatePassword: string) {

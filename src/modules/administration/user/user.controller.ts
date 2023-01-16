@@ -26,9 +26,9 @@ export const insertUserHandler = async (
 ) => {
   try {
     const { body } = req;
-    // TODO: email/or username exist
     // validate other fields
     body.password = 'demodemo';
+    body.tenant = res.locals?.user?.tenant;
 
     const user = await createUser(body);
     res.status(200).json({
@@ -47,7 +47,7 @@ export const updateUserHandler = async (
 ) => {
   try {
     const { body, params: { userId } } = req;
-    // TODO: email/or username exist
+    body.tenant = res.locals?.user?.tenant;
     // validate other fields
 
     const user = await updateUser(userId, body);
@@ -105,7 +105,7 @@ export const getAllUsersHandler = async (
   try {
     let { page = 1, items_per_page = 10, search = '', sort = '', order = '' } = req.query;
 
-    const result = await queryUsers(+page, +items_per_page, search, sort, order);
+    const result = await queryUsers(res.locals?.user?.tenant, +page, +items_per_page, search, sort, order);
     res.status(200).json({
       status: StatusCode.Success,
       data: result.data,

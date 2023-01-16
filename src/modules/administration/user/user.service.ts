@@ -7,10 +7,16 @@ import { signJwt } from '../../../utils/jwt';
 import redisClient from '../../../utils/connectRedis';
 import { DocumentType } from '@typegoose/typegoose';
 import { getPagination } from '../../../utils/paginationHelper';
+import AppError from '../../../utils/errors/appError';
 
 // CreateUser service
 export const createUser = async (input: Partial<User>) => {
   try {
+    // email exist control
+    const userExist = await userEmailExist(input.email as string, input.tenant!.toString());
+    if (userExist)
+      throw new AppError('User email exist', 409);
+
     const user = await userModel.create(input);
     return omit(user.toJSON(), excludedFields);
   } catch (error: any) {
@@ -59,6 +65,15 @@ export const findUserById = async (id: string) => {
   return omit(user, excludedFields);
 };
 
+// Find one user by any fields
+export const findUser = async (
+  query: FilterQuery<User>,
+  options: QueryOptions = {}
+) => {
+  // TODO: add tenant filter
+  return await userModel.findOne(query, {}, options).select('+password');
+};
+
 // Find All users
 export const findAllUsers = async () => {
   return await userModel.find();
@@ -66,16 +81,20 @@ export const findAllUsers = async () => {
 
 // List users with paging
 //export const listUsers  = async (page : number = 0, limit: number = 2, sort = '') => {
-export const queryUsers = async (page: number = 1, items_per_page: number = 10, search: string | any = '', sortField: string | any = '', order: string | any = '') => {
+export const queryUsers = async (tenantId: string, page: number = 1, items_per_page: number = 10, search: string | any = '', sortField: string | any = '', order: string | any = '') => {
   try {
     let sort = sortField ? JSON.parse(`{"${sortField}":"${order ?? '1'}"}`) : {};
 
     let filter = {
+      $and: [
+        { "tenant": tenantId }
+      ],
       $or: [
         { "name": new RegExp(`${search}`, 'i') },
         { "email": new RegExp(`${search}`, 'i') }]
     };
-    // TODO: add tenant filter
+    console.log('FILTER', filter);
+
     let data = await userModel.find(filter)
       //.populate('tenant')
       .sort(sort)
@@ -92,15 +111,6 @@ export const queryUsers = async (page: number = 1, items_per_page: number = 10, 
   } catch (error: any) {
     throw error;
   }
-};
-
-// Find one user by any fields
-export const findUser = async (
-  query: FilterQuery<User>,
-  options: QueryOptions = {}
-) => {
-  // TODO: add tenant filter
-  return await userModel.findOne(query, {}, options).select('+password');
 };
 
 // Sign Token
@@ -121,4 +131,13 @@ export const signToken = async (user: DocumentType<User>) => {
 
   // Return access token
   return { access_token };
+};
+
+// User email and Tenant exist
+export const userEmailExist = async (email: string, tenantId: string) => {
+  try {
+    return await userModel.exists({ email: email, tenant: tenantId });
+  } catch (error: any) {
+    throw error;
+  }
 };

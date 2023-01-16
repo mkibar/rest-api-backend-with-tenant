@@ -1,3 +1,4 @@
+// https://github.com/wpcodevo/jwt_authentication_authorization_node
 require('dotenv').config();
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
@@ -9,8 +10,9 @@ import userRouter from './modules/administration/user/user.route';
 import usersRouter from './modules/administration/user/users.route';
 import authRouter from './modules/_auth/auth.route';
 import tenantRouter from './modules/administration/tenant/tenant.route';
-
-// https://github.com/wpcodevo/jwt_authentication_authorization_node
+import roleRouter from './modules/administration/role/role.route';
+import userRoleRouter from './modules/administration/userrole/userrole.route'
+import permissionRouter from './modules/administration/permission/permission.route'
 
 const app = express();
 
@@ -38,6 +40,9 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/tenant', tenantRouter);
+app.use('/api/role', roleRouter);
+app.use('/api/userrole', userRoleRouter);
+app.use('/api/permission', permissionRouter);
 
 // Testing
 app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
