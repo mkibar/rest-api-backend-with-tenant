@@ -47,7 +47,6 @@ export const queryRoles = async (tenantId: string, page: number = 1, items_per_p
     try {
         let sort = sortField ? JSON.parse(`{"${sortField}":"${order ?? '1'}"}`) : {};
 
-        //let filter = { "name": new RegExp(`${search}`, 'i') };
         let filter = {
             $and: [
                 { "tenant": tenantId },

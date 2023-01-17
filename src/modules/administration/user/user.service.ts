@@ -61,11 +61,11 @@ export const deleteUser = async (id: string) => {
 
 // Find User by Id
 export const findUserById = async (id: string) => {
-  const user = await userModel.findById(id).lean();   // TODO: add tenant filter
+  const user = await userModel.findById(id).lean();   // TODO: add tenant filter gerekir mi
   return omit(user, excludedFields);
 };
 
-// Find one user by any fields
+// Find one user by any fields, not using Tenant
 export const findUser = async (
   query: FilterQuery<User>,
   options: QueryOptions = {}
@@ -93,8 +93,7 @@ export const queryUsers = async (tenantId: string, page: number = 1, items_per_p
         { "name": new RegExp(`${search}`, 'i') },
         { "email": new RegExp(`${search}`, 'i') }]
     };
-    console.log('FILTER', filter);
-
+    
     let data = await userModel.find(filter)
       //.populate('tenant')
       .sort(sort)

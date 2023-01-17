@@ -6,13 +6,15 @@ import config from 'config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './utils/connectDB';
+import RunDbSeeder from './utils/seederDB';
 import userRouter from './modules/administration/user/user.route';
-import usersRouter from './modules/administration/user/users.route';
 import authRouter from './modules/_auth/auth.route';
 import tenantRouter from './modules/administration/tenant/tenant.route';
 import roleRouter from './modules/administration/role/role.route';
 import userRoleRouter from './modules/administration/userrole/userrole.route'
 import permissionRouter from './modules/administration/permission/permission.route'
+import organizationUnitRouter from './modules/common/organizationunit/organizationunit.route'
+
 
 const app = express();
 
@@ -38,11 +40,11 @@ app.use(
 // 5. Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-app.use('/api/users', usersRouter);
 app.use('/api/tenant', tenantRouter);
 app.use('/api/role', roleRouter);
 app.use('/api/userrole', userRoleRouter);
 app.use('/api/permission', permissionRouter);
+app.use('/api/organizationUnit', organizationUnitRouter);
 
 // Testing
 app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
@@ -77,4 +79,5 @@ app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
   // 👇 call the connectDB function here
   connectDB();
+  RunDbSeeder();
 });

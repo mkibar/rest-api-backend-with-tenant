@@ -1,5 +1,4 @@
 import {
-  DocumentType,
   getModelForClass,
   index,
   modelOptions,
@@ -9,8 +8,9 @@ import {
   Severity,
 } from '@typegoose/typegoose';
 import bcrypt from 'bcryptjs';
-import { Mixed, ObjectId } from 'mongoose';
+import { Permission } from '../permission/permission.model';
 import { Tenant } from '../tenant/tenant.model';
+import userRoleModel from '../userrole/userrole.model';
 
 @index({ email: 1 })
 @pre<User>('save', async function () {
@@ -31,7 +31,6 @@ import { Tenant } from '../tenant/tenant.model';
     allowMixed: Severity.ALLOW
   }
 })
-
 // Export the User class to be used as TypeScript type
 export class User {
   @prop()
@@ -47,7 +46,7 @@ export class User {
   password: string;
 
   @prop({ default: true })
-  isActive: boolean;
+  isEnabled: boolean;
 
   // TODO: will delete
   @prop({ default: 'user' })
@@ -55,8 +54,7 @@ export class User {
 
   @prop({
     required: true,
-    ref: 'Tenant'
-    //ref: () => Tenant
+    ref: () => Tenant
   })
   public tenant: Ref<Tenant>
 
@@ -82,6 +80,13 @@ export class User {
   // kullanicinin son giris yapabilecegi tarih
   loginEndDate?: Date;
 
+  @prop({
+    ref: () => Permission,
+    foreignField: 'user',
+    localField: '_id',
+    justOne: false
+  })
+  public permissions?: Ref<Permission>[];
 
   // this will create a virtual property called 'fullName'
   public get fullName() {

@@ -17,14 +17,8 @@ export class Tenant {
     @prop()
     name: string;
 
-    @prop({ default: false })
-    isDeleted: boolean;
-
-    @prop()
-    deleterId: string;
-
-    @prop()
-    deletionTime: Date;
+    @prop({ default: true })
+    isEnabled: boolean;
 }
 
 // Create the tenant model from the Tenant class
