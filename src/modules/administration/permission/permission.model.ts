@@ -66,6 +66,11 @@ export class Permission {
     @prop()
     order: number
 
+    // @prop()
+    // public createdUserId: string;
+
+    // @prop()
+    // public updatededUserId: string;
 }
 
 // Create the permission model from the Permission class

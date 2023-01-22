@@ -31,6 +31,12 @@ export class OrganizationUnit {
         ref: () => Tenant
     })
     public tenant: Ref<Tenant>
+
+    // @prop()
+    // public createdUserId: string;
+
+    // @prop()
+    // public updatededUserId: string;
 }
 
 // Create the organizationUnit model from the OrganizationUnit class

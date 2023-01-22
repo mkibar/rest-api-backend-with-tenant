@@ -34,6 +34,12 @@ export class UserRole {
         ref: 'Tenant'
     })
     public tenant: Ref<Tenant>
+
+    // @prop()
+    // public createdUserId: string;
+
+    // @prop()
+    // public updatededUserId: string;
 }
 
 // Create the userRole model from the UserRole class

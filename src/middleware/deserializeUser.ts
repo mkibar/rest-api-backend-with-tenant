@@ -3,6 +3,7 @@ import { findUserById } from '../modules/administration/user/user.service';
 import AppError from '../utils/errors/appError';
 import redisClient from '../utils/connectRedis';
 import { verifyJwt } from '../utils/jwt';
+import userLogger from '../utils/logger';
 
 export const deserializeUser = async (
   req: Request,
@@ -31,7 +32,7 @@ export const deserializeUser = async (
     if (!decoded) {
       return next(new AppError(`Invalid token or user doesn't exist`, 401));
     }
-    
+
     // Check if user has a valid session
     const session = await redisClient.get(decoded.sub);
 
@@ -53,7 +54,7 @@ export const deserializeUser = async (
     // This is really important (Helps us know if the user is logged in from other controllers)
     // You can do: (req.user or res.locals.user)
     res.locals.user = user;
-    
+
     next();
   } catch (err: any) {
     next(err);

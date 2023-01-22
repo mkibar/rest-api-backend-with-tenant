@@ -19,6 +19,12 @@ export class Tenant {
 
     @prop({ default: true })
     isEnabled: boolean;
+
+    // @prop()
+    // public createdUserId: string;
+
+    // @prop()
+    // public updatededUserId: string; 
 }
 
 // Create the tenant model from the Tenant class

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import config from 'config';
 
-const dbUrl = `mongodb://${config.get('dbName')}:${config.get(
+export const dbUrl = `mongodb://${config.get('dbName')}:${config.get(
   'dbPass'
 )}@localhost:27027/gozcum?authSource=admin`;
 
@@ -15,5 +15,21 @@ const connectDB = async () => {
     setTimeout(connectDB, 5000);
   }
 };
+
+
+export const conn = mongoose.connection;
+// // mongoose transaction kullanımı
+// const session = await conn.startSession();
+//  try {
+//   session.startTransaction();
+//    const user = await User.create([{ name: 'Van Helsing' }], { session });
+//    await ShippingAddress.create([{ address: 'Transylvania', user_id: user.id }], { session });
+//   await session.commitTransaction();
+//    console.log('success');
+//  } catch (error) {
+//    console.log('error');
+//   await session.abortTransaction();
+// }
+//   session.endSession();
 
 export default connectDB;

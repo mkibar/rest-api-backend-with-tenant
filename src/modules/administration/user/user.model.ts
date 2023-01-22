@@ -10,7 +10,6 @@ import {
 import bcrypt from 'bcryptjs';
 import { Permission } from '../permission/permission.model';
 import { Tenant } from '../tenant/tenant.model';
-import userRoleModel from '../userrole/userrole.model';
 
 @index({ email: 1 })
 @pre<User>('save', async function () {
@@ -87,6 +86,12 @@ export class User {
     justOne: false
   })
   public permissions?: Ref<Permission>[];
+
+  // @prop()
+  // public createdUserId: string;
+
+  // @prop()
+  // public updatededUserId: string;
 
   // this will create a virtual property called 'fullName'
   public get fullName() {
