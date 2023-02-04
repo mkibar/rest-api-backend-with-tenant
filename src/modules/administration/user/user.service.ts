@@ -28,6 +28,7 @@ export const createUser = async (input: Partial<User>) => {
 export const updateUser = async (id: string, input: Partial<User>) => {
   try {
     const user = await findUserById(id);    // TODO: add tenant filter
+    // TODO: email, password alanı gibi özel alanlar burada degistirilmemeli
     const updatableUser = {
       ...user,
       ...input,

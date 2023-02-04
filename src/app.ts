@@ -14,9 +14,31 @@ import roleRouter from './modules/administration/role/role.route';
 import userRoleRouter from './modules/administration/userrole/userrole.route'
 import permissionRouter from './modules/administration/permission/permission.route'
 import organizationUnitRouter from './modules/common/organizationunit/organizationunit.route'
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from 'swagger-jsdoc';
 
+const port = config.get<number>('port');
 
 const app = express();
+
+// swagger options
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "REST API for Swagger Documentation",
+      version: "1.0.0",
+    },
+    schemes: ["http", "https"],
+    servers: [{ url: `http://localhost:${port}/` }],
+  },
+  apis: [
+    `${__dirname}/modules/administration/user/user.route.ts`,
+    // TODO: diger route siniflari da eklenecek
+  ],
+};
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware
 
@@ -74,7 +96,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-const port = config.get<number>('port');
+
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
   // 👇 call the connectDB function here
