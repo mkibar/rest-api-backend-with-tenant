@@ -31,9 +31,22 @@ const swaggerOptions = {
     },
     schemes: ["http", "https"],
     servers: [{ url: `http://localhost:${port}/` }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }]
   },
   apis: [
     `${__dirname}/modules/administration/user/user.route.ts`,
+    `${__dirname}/modules/administration/tenant/tenant.route.ts`,
     // TODO: diger route siniflari da eklenecek
   ],
 };
