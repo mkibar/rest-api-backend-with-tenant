@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCode } from '../../../models/enums';
+import userModel from '../user/user.model';
 import { createTenant, deleteTenant, findTenantById, queryTenants, updateTenant } from './tenant.service';
 
 export const getTenantHandler = async (

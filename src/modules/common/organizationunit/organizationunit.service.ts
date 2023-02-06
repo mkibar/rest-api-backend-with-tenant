@@ -20,13 +20,11 @@ export const createOrganizationUnit = async (input: Partial<OrganizationUnit>) =
 // UpdateOrganizationUnit service
 export const updateOrganizationUnit = async (id: string, input: Partial<OrganizationUnit>) => {
     try {
-        const organizationUnit = await findOrganizationUnitById(id);
         const updatableOrganizationUnit = {
-            ...organizationUnit,
             ...input,
             //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
         };
-        return await organizationUnitModel.updateOne(updatableOrganizationUnit);
+        return await organizationUnitModel.findByIdAndUpdate(id, updatableOrganizationUnit, { new: true });
     } catch (error: any) {
         throw error;
     }
@@ -56,7 +54,7 @@ export const queryOrganizationUnits = async (tenantId: string, page: number = 1,
         const filter: FilterQuery<OrganizationUnit> = { tenant: tenantId };
         if (!search)
             filter.name = new RegExp(`${search}`, 'i');
-            
+
         let data = await organizationUnitModel.find(filter)
             .sort(sort)
             .skip(items_per_page * (page - 1))    // kacinci sayfadan baslanacagi 
@@ -76,7 +74,7 @@ export const queryOrganizationUnits = async (tenantId: string, page: number = 1,
 
 // Find OrganizationUnit by Id
 export const findOrganizationUnitById = async (id: string) => {
-    return await organizationUnitModel.findById(id).lean();
+    return await organizationUnitModel.findById(id);
 };
 
 // Find one role by any fields

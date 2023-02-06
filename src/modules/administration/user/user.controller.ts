@@ -27,7 +27,8 @@ export const insertUserHandler = async (
   try {
     const { body } = req;
     // validate other fields
-    body.password = 'demodemo';
+    if (!body.password)
+      body.password = 'demodemo';
     body.tenant = res.locals?.user?.tenant;
 
     const user = await createUser(body);

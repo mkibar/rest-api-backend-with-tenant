@@ -20,13 +20,11 @@ export const createRole = async (input: Partial<Role>) => {
 // UpdateRole service
 export const updateRole = async (id: string, input: Partial<Role>) => {
     try {
-        const role = await findRoleById(id);
         const updatableRole = {
-            ...role,
             ...input,
             //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
         };
-        return await roleModel.updateOne(updatableRole);
+        return await roleModel.findByIdAndUpdate(id, updatableRole, { new: true });
     } catch (error: any) {
         throw error;
     }
@@ -72,7 +70,7 @@ export const queryRoles = async (tenantId: string, page: number = 1, items_per_p
 
 // Find Role by Id
 export const findRoleById = async (id: string) => {
-    return await roleModel.findById(id).lean();
+    return await roleModel.findById(id);
 };
 
 // Find one role by any fields

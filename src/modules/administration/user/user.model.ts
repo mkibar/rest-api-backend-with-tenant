@@ -23,7 +23,7 @@ import { Tenant } from '../tenant/tenant.model';
   schemaOptions: {
     timestamps: true,             // Add createdAt and updatedAt fields
     //versionKey: false,            // __v property sini ekleme
-    toJSON: { virtuals: true, transform: function (doc, ret) { delete ret._id; delete ret.__v; } },
+    toJSON: { virtuals: true, transform: function (doc, ret) {  ret.id = ret._id; delete ret._id; delete ret.__v; return ret;  } },
     toObject: { virtuals: true }
   },
   options: {

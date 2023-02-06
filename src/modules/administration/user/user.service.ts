@@ -27,14 +27,11 @@ export const createUser = async (input: Partial<User>) => {
 // UpdateUser service
 export const updateUser = async (id: string, input: Partial<User>) => {
   try {
-    const user = await findUserById(id);    // TODO: add tenant filter
-    // TODO: email, password alanı gibi özel alanlar burada degistirilmemeli
     const updatableUser = {
-      ...user,
       ...input,
       //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
     };
-    const updatedUser = await userModel.updateOne(updatableUser);
+    const updatedUser = await userModel.findByIdAndUpdate(id, updatableUser, { new: true });
     return omit(updatedUser, excludedFields);
   } catch (error: any) {
     throw error;
@@ -62,7 +59,7 @@ export const deleteUser = async (id: string) => {
 
 // Find User by Id
 export const findUserById = async (id: string) => {
-  const user = await userModel.findById(id).lean();   // TODO: add tenant filter gerekir mi
+  const user = await userModel.findById(id);   // TODO: add tenant filter gerekir mi
   return omit(user, excludedFields);
 };
 
@@ -94,7 +91,7 @@ export const queryUsers = async (tenantId: string, page: number = 1, items_per_p
         { "name": new RegExp(`${search}`, 'i') },
         { "email": new RegExp(`${search}`, 'i') }]
     };
-    
+
     let data = await userModel.find(filter)
       //.populate('tenant')
       .sort(sort)

@@ -15,13 +15,11 @@ export const createTenant = async (input: Partial<Tenant>) => {
 // UpdateTenant service
 export const updateTenant = async (id: string, input: Partial<Tenant>) => {
     try {
-        const tenant = await findTenantById(id);
         const updatableTenant = {
-            ...tenant,
             ...input,
             //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
         };
-        return await tenantModel.updateOne(updatableTenant);
+        return await tenantModel.findByIdAndUpdate(id, updatableTenant, { new: true });
     } catch (error: any) {
         throw error;
     }
@@ -48,7 +46,7 @@ export const deleteTenant = async (id: string) => {
 
 // Find Tenant by Id
 export const findTenantById = async (id: string) => {
-    return await tenantModel.findById(id).lean();
+    return await tenantModel.findById(id);
 };
 
 // List Tenants with paging

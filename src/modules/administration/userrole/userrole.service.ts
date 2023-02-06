@@ -20,13 +20,11 @@ export const createUserRole = async (input: Partial<UserRole>) => {
 // UpdateUserRole service
 export const updateUserRole = async (id: string, input: Partial<UserRole>) => {
     try {
-        const userRole = await findUserRoleById(id);
         const updatableUserRole = {
-            ...userRole,
             ...input,
             //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
         };
-        return await userRoleModel.updateOne(updatableUserRole);
+        return await userRoleModel.findByIdAndUpdate(id, updatableUserRole, { new: true });
     } catch (error: any) {
         throw error;
     }
@@ -76,7 +74,7 @@ export const queryUserRoles = async (tenantId: string,
 
 // Find UserRole by Id
 export const findUserRoleById = async (id: string) => {
-    return await userRoleModel.findById(id).lean();
+    return await userRoleModel.findById(id);
 };
 
 // Find one role by any fields

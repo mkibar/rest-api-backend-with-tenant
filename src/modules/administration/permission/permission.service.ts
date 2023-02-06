@@ -23,13 +23,11 @@ export const createPermission = async (input: Partial<Permission>) => {
 // UpdatePermission service
 export const updatePermission = async (id: string, input: Partial<Permission>) => {
     try {
-        const permission = await findPermissionById(id);
         const updatablePermission = {
-            ...permission,
             ...input,
             //updatedDate: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
         };
-        return await permissionModel.updateOne(updatablePermission);
+        return await permissionModel.findByIdAndUpdate(id, updatablePermission, { new: true });
     } catch (error: any) {
         throw error;
     }
@@ -77,7 +75,7 @@ export const queryPermissions = async (tenantId: string,
 
 // Find Permission by Id
 export const findPermissionById = async (id: string) => {
-    return await permissionModel.findById(id).lean();
+    return await permissionModel.findById(id);
 };
 
 // Find one role by any fields

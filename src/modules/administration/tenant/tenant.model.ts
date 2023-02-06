@@ -8,7 +8,7 @@ import {
     schemaOptions: {
         timestamps: true,               // Add createdAt and updatedAt fields
         versionKey: false,              // __v property sini ekleme
-        toJSON: { virtuals: true, transform: function (doc, ret) { delete ret._id } },
+        toJSON: { virtuals: false, transform: function (doc, ret) { ret.id = ret._id; delete ret._id; delete ret.__v; return ret; } },
         toObject: { virtuals: true }
     }
 })
