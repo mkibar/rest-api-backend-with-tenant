@@ -86,11 +86,11 @@ export const getListPermissionsHandler = async (
     next: NextFunction
 ) => {
     try {
-        let { code = '',
+        let { search = '',
             page = 1, items_per_page = 10, sort = '', order = '' } = req.query;
 
-        const result = await queryPermissions(res.locals?.user?.tenant, 
-            code as string,
+        const result = await queryPermissions(res.locals?.user?.tenant,
+            search as string,
             +page, +items_per_page, sort = sort, order = order);
         res.status(200).json({
             status: StatusCode.Success,

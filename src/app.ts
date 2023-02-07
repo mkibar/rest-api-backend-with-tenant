@@ -47,6 +47,10 @@ const swaggerOptions = {
   apis: [
     `${__dirname}/modules/administration/user/user.route.ts`,
     `${__dirname}/modules/administration/tenant/tenant.route.ts`,
+    `${__dirname}/modules/administration/permission/permission.route.ts`,
+    `${__dirname}/modules/administration/role/role.route.ts`,
+    `${__dirname}/modules/administration/userrole/userrole.route.ts`,
+    `${__dirname}/modules/common/organizationunit/organizationunit.route.ts`,
     // TODO: diger route siniflari da eklenecek
   ],
 };

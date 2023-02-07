@@ -46,15 +46,15 @@ export const deletePermission = async (id: string, tenantId: string) => {
 
 // List Permissions with paging
 export const queryPermissions = async (tenantId: string,
-    code: string,
+    search: string,
     page: number = 1, items_per_page: number = 10,
     sortField: string | any = '', order: string | any = '') => {
     try {
         let sort = sortField ? JSON.parse(`{"${sortField}":"${order ?? '1'}"}`) : {};
 
         const query: FilterQuery<Permission> = { tenant: tenantId };
-        if (code)
-            query.code = new RegExp(`${code}`, 'i');
+        if (search)
+            query.code = new RegExp(`${search}`, 'i');
 
         let data = await permissionModel.find(query)
             .sort(sort)
