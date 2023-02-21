@@ -4,7 +4,8 @@ import {
     getPermissionHandler,
     insertPermissionHandler,
     deletePermissionHandler,
-    getListPermissionsHandler
+    getListPermissionsHandler,
+    getAllPermissionsForUserHandler
 } from './permission.controller';
 import { deserializeUser } from '../../../middleware/deserializeUser';
 import { requireUser } from '../../../middleware/requireUser';
@@ -78,6 +79,47 @@ router.use(deserializeUser, requireUser);
  *                  description: Internal server error
  */
 router.get('/list', getListPermissionsHandler);
+
+/**
+ * @swagger
+ * /api/permission/user/{userId}:
+ *      get:
+ *          summary: Get all permissions for User 
+ *          tags:
+ *              - PermissionEndpoints
+ *          description: Get all permissions with the specified ID
+ *          security:
+ *              - bearerAuth: []
+ *          parameters:
+ *              - name: userId
+ *                in: path
+ *                schema:
+ *                  type: string 
+ *                required: true
+ *                description:  The user ID
+ *          requestBody:
+ *              required: false
+ *          responses:
+ *              200:
+ *                  description: Permission was updated
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  status:
+ *                                      type: string
+ *                                      example: success
+ *                                  data:
+ *                                      type: object
+ *              401:
+ *                  description: Unauthorized
+ *              404:
+ *                  description: Not found
+ *              500:
+ *                  description: Internal server error
+ */
+router.get('/user/:userId', getAllPermissionsForUserHandler);
 
 /**
  * @swagger

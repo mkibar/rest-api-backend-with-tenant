@@ -1,7 +1,8 @@
-import { FilterQuery, QueryOptions } from 'mongoose';
+import mongoose, { ClientSession, FilterQuery, QueryOptions } from 'mongoose';
 import roleModel, { Role } from './role.model';
 import { getPagination } from '../../../utils/paginationHelper';
 import AppError from '../../../utils/errors/appError';
+import { deletePermissionsByRoleId, deletePermissionsByUserId } from '../permission/permission.service';
 
 // CreateRole service
 export const createRole = async (input: Partial<Role>) => {
@@ -32,12 +33,39 @@ export const updateRole = async (id: string, input: Partial<Role>) => {
 
 // DeleteRole service
 export const deleteRole = async (id: string) => {
+
+    const session: ClientSession = await mongoose.startSession();
+    session.startTransaction();
     try {
-        let result = await roleModel.deleteOne({ _id: `${id}` });
-        return result;
-    } catch (error: any) {
+        let role = await roleModel.findById(id);
+        if (role) {
+            deletePermissionsByRoleId(role?.id, role?.tenant!.toString())
+            deletePermissionsByUserId(role?.id, role?.tenant!.toString())
+            let result = await roleModel.deleteOne({ _id: `${id}` });
+
+            await session.commitTransaction();
+            return result;
+        }
+    } catch (error) {
+        // Rollback any changes made in the database
+        await session.abortTransaction();
+        // Rethrow the error
         throw error;
+    } finally {
+        // Ending the session
+        session.endSession();
     }
+    // try {
+    //     let role = await roleModel.findById(id);
+    //     if (role) {
+    //         deletePermissionsByRoleId(role?.id, role?.tenant!.toString())
+    //         deletePermissionsByUserId(role?.id, role?.tenant!.toString())
+    //         let result = await roleModel.deleteOne({ _id: `${id}` });
+    //         return result;
+    //     }
+    // } catch (error: any) {
+    //     throw error;
+    // }
 };
 
 // List Roles with paging

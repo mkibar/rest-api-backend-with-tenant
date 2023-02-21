@@ -40,6 +40,26 @@ export const deleteUserRole = async (id: string, tenantId: string) => {
     }
 };
 
+// Delete All UserRole by RoleId
+export const deleteUserRolesByRoleId = async (roleId: string, tenantId: string) => {
+    try {
+        let result = await userRoleModel.deleteMany({ role: roleId, "tenant": tenantId });
+        return result;
+    } catch (error: any) {
+        throw error;
+    }
+};
+
+// Delete All UserRole by UserId
+export const deleteUserRolesByUserId = async (userId: string, tenantId: string) => {
+    try {
+        let result = await userRoleModel.deleteMany({ user: userId, "tenant": tenantId });
+        return result;
+    } catch (error: any) {
+        throw error;
+    }
+};
+
 // List UserRoles with paging
 export const queryUserRoles = async (tenantId: string,
     userId: string, roleId: string,

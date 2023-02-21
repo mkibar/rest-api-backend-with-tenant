@@ -44,6 +44,26 @@ export const deletePermission = async (id: string, tenantId: string) => {
     }
 };
 
+// Delete Role's All Permissions
+export const deletePermissionsByRoleId = async (roleId: string, tenantId: string) => {
+    try {
+        let result = await permissionModel.deleteMany({ role: roleId, tenant: tenantId });
+        return result;
+    } catch (error: any) {
+        throw error;
+    }
+};
+
+// Delete User's All Permissions
+export const deletePermissionsByUserId = async (userId: string, tenantId: string) => {
+    try {
+        let result = await permissionModel.deleteMany({ user: userId, tenant: tenantId });
+        return result;
+    } catch (error: any) {
+        throw error;
+    }
+};
+
 // List Permissions with paging
 export const queryPermissions = async (tenantId: string,
     search: string,
@@ -99,4 +119,10 @@ export const permissionExist = async (code: string, userId: string, roleId: stri
     } catch (error: any) {
         throw error;
     }
+};
+
+// Find Permission by Id
+export const findAllPermissionsByUserId = async (id: string) => {
+    // TODO: yetkisi oldugu rollere ait yetkileride al
+    return await permissionModel.find({ user: id }, 'code displayName');
 };

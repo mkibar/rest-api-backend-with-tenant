@@ -13,7 +13,7 @@ const router = express.Router();
 // Register user route
 /**
  * @swagger
- * /api/register:
+ * /api/auth/register:
  *      post:
  *          summary: Register user
  *          tags:
@@ -63,7 +63,7 @@ router.post('/register', validate(createUserSchema), registerHandler);
 // Login user route
 /**
  * @swagger
- * /api/login:
+ * /api/auth/login:
  *      post:
  *          summary: Login user
  *          tags:

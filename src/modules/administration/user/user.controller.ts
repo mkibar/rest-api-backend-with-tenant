@@ -89,9 +89,7 @@ export const getMeHandler = (
     const user = res.locals.user;
     res.status(200).json({
       status: StatusCode.Success,
-      data: {
-        user,
-      },
+      data: user
     });
   } catch (err: any) {
     next(err);

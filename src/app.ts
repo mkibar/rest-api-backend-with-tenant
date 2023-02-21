@@ -45,6 +45,7 @@ const swaggerOptions = {
     }]
   },
   apis: [
+    `${__dirname}/modules/_auth/auth.route.ts`,
     `${__dirname}/modules/administration/user/user.route.ts`,
     `${__dirname}/modules/administration/tenant/tenant.route.ts`,
     `${__dirname}/modules/administration/permission/permission.route.ts`,

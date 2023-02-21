@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCode } from '../../../models/enums';
 import AppError from '../../../utils/errors/appError';
-import { createPermission, deletePermission, findPermissionById, queryPermissions, updatePermission } from './permission.service';
+import { createPermission, deletePermission, findAllPermissionsByUserId, findPermissionById, queryPermissions, updatePermission } from './permission.service';
 
 // find permission by Id
 export const getPermissionHandler = async (
@@ -10,10 +10,10 @@ export const getPermissionHandler = async (
     next: NextFunction
 ) => {
     try {
-        const role = await findPermissionById(req.params.id);
+        const permission = await findPermissionById(req.params.id);
         res.status(200).json({
             status: StatusCode.Success,
-            data: role,
+            data: permission,
         });
     } catch (err: any) {
         next(err);
@@ -96,6 +96,22 @@ export const getListPermissionsHandler = async (
             status: StatusCode.Success,
             data: result.data,
             payload: result.payload
+        });
+    } catch (err: any) {
+        next(err);
+    }
+};
+
+export const getAllPermissionsForUserHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const permissions = await findAllPermissionsByUserId(req.params.userId);
+        res.status(200).json({
+            status: StatusCode.Success,
+            data: permissions,
         });
     } catch (err: any) {
         next(err);
